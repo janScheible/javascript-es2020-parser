@@ -15,6 +15,7 @@ public class JavaScriptParserTest {
 	@Test
 	public void basicParseTest() {
 		final JavaScriptLexer lexer = new JavaScriptLexer(CharStreams.fromString("class MyClass { }"));
+		lexer.setUseStrictDefault(true);
 		final JavaScriptParser parser = new JavaScriptParser(new CommonTokenStream(lexer));
 
 		parser.addParseListener(new JavaScriptParserBaseListener() {

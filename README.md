@@ -5,12 +5,13 @@ Revision f5a2ff3e8fc570a7d5d282842c96e3ca5d93afd3 was used.
 The grammar follows a rather pragmatic approach in terms of ECMAScript compatibility.
 es2020 compatibility should be more or less given.
 
-Unit tests only for `import` keyword for now. More will perhaps follow later.
+Unit tests only for `import` keyword and class fields for now. More will perhaps follow later.
 
 Usage of the parser:
 
 ```java
 final JavaScriptLexer lexer = new JavaScriptLexer(CharStreams.fromString("class MyClass { }"));
+lexer.setUseStrictDefault(true);
 final JavaScriptParser parser = new JavaScriptParser(new CommonTokenStream(lexer));
 
 parser.addParseListener(new JavaScriptParserBaseListener() {

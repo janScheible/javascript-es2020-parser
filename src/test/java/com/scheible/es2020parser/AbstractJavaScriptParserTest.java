@@ -42,6 +42,8 @@ public abstract class AbstractJavaScriptParserTest {
 
 	protected JavaScriptParser createParser(final String javaScriptSource) {
 		final JavaScriptLexer lexer = new JavaScriptLexer(CharStreams.fromString(javaScriptSource));
+		lexer.setUseStrictDefault(true);
+
 		final JavaScriptParser parser = new JavaScriptParser(new CommonTokenStream(lexer));
 
 		return parser;
