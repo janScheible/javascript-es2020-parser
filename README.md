@@ -7,7 +7,9 @@ es2020 compatibility should be more or less given.
 
 Unit tests only for `import` keyword and class fields for now. More will perhaps follow later.
 
-Usage of the parser:
+## Usage of the parser
+
+Either with direct instantiation
 
 ```java
 final JavaScriptLexer lexer = new JavaScriptLexer(CharStreams.fromString("class MyClass { }"));
@@ -23,13 +25,36 @@ parser.addParseListener(new JavaScriptParserBaseListener() {
 parser.program();
 ```
 
+or via one of the convenience methods of `ListeningJavaScriptParser` like
+
+```java
+ListeningJavaScriptParser.parse("class MyClass { }", new JavaScriptParserBaseListener() {
+	@Override
+	public void exitClassDeclaration(ClassDeclarationContext ctx) {
+		assertThat(ctx.identifier().getText()).isEqualTo("MyClass");
+	}
+});
+```
+
+together with an implementation of a `JavaScriptParserBaseListener`.
+
+### Module specifier support
+
+Starting with 0.3.0 there is explicit support of module specifiers extracted from the JavaScript sources (static and dynamic imports).
+The `ImportParseListener` can be used together with the `ListeningJavaScriptParser`.
+The `ModuleSpecifier` class allows for example to strip off the file extension or to resolve the module specifier to a `Path` or `URI`.
+
+Furthermore the class `JavaScriptTransformer` can be used to transform the returned module specifier.
+
+## Maven artifact
+
 Maven artifact (is also available via [![](https://jitpack.io/v/janScheible/javascript-es2020-parser.svg)](https://jitpack.io/#janScheible/javascript-es2020-parser)):
 
 ```xml
 <dependency>
 	<groupId>com.scheible</groupId>
 	<artifactId>javascript-es2020-parser</artifactId>
-	<version>0.1.1</version>
+	<version>0.3.0</version>
 </dependency>
 ```
 
