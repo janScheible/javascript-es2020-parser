@@ -28,15 +28,20 @@ parser.program();
 or via one of the convenience methods of `ListeningJavaScriptParser` like
 
 ```java
-ListeningJavaScriptParser.parse("class MyClass { }", new JavaScriptParserBaseListener() {
+ListeningJavaScriptParser.parse("class MyClass { }", new ErrorAwareJavaScriptParserBaseListener() {
 	@Override
 	public void exitClassDeclaration(ClassDeclarationContext ctx) {
 		assertThat(ctx.identifier().getText()).isEqualTo("MyClass");
 	}
+	
+	@Override
+	public void syntaxError(String description) {
+		System.out.println(description);
+	}
 });
 ```
 
-together with an implementation of a `JavaScriptParserBaseListener`.
+together with an implementation of a `JavaScriptParserBaseListener` or `ErrorAwareJavaScriptParserBaseListener`.
 
 ### Module specifier support
 
@@ -54,7 +59,7 @@ Maven artifact (is also available via [![](https://jitpack.io/v/janScheible/java
 <dependency>
 	<groupId>com.scheible</groupId>
 	<artifactId>javascript-es2020-parser</artifactId>
-	<version>0.3.0</version>
+	<version>0.4.0</version>
 </dependency>
 ```
 

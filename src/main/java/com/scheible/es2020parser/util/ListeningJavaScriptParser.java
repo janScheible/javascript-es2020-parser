@@ -7,9 +7,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ConsoleErrorListener;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 
 /**
  *
@@ -24,6 +28,19 @@ public class ListeningJavaScriptParser {
 		final JavaScriptParser parser = new JavaScriptParser(new CommonTokenStream(lexer));
 		for (final JavaScriptParserListener listener : listeners) {
 			parser.addParseListener(listener);
+			
+			if(listener instanceof ErrorAwareJavaScriptParserListener) {
+				parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
+				
+				parser.addErrorListener(new BaseErrorListener() {
+					@Override
+					public void syntaxError(final Recognizer<?, ?> recognizer, final Object offendingSymbol, 
+							final int line, final int charPositionInLine, final String msg, final RecognitionException e) {
+						((ErrorAwareJavaScriptParserListener)listener).syntaxError("at " + line + ":" 
+								+ charPositionInLine + " " + msg);
+					}
+				});
+			}
 		}
 
 		parser.program();
