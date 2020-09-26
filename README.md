@@ -59,7 +59,7 @@ Maven artifact (is also available via [![](https://jitpack.io/v/janScheible/java
 <dependency>
 	<groupId>com.scheible</groupId>
 	<artifactId>javascript-es2020-parser</artifactId>
-	<version>0.4.0</version>
+	<version>0.5.0</version>
 </dependency>
 ```
 

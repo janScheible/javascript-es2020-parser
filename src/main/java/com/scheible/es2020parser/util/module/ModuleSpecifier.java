@@ -44,7 +44,15 @@ public class ModuleSpecifier implements Positionable {
 	public boolean hasExtension() {
 		return value.lastIndexOf(".") > value.lastIndexOf("/");
 	}
-
+	
+	public boolean isSourceRootRelative() {
+		return value.startsWith("~");
+	}
+	
+	public boolean isRelative() {
+		return value.startsWith(".");
+	}
+	
 	public Path resolve(final Path sourceRootDir, final Path sourceJavaScriptFile) {
 		if (!sourceRootDir.isAbsolute()) {
 			throw new IllegalArgumentException(String.format("The source root dir '%s' has to be absolute!", 
@@ -57,9 +65,9 @@ public class ModuleSpecifier implements Positionable {
 	}
 
 	public URI resolve(final URI sourceRootDir, final URI sourceJavaScriptFile) {
-		if (getValue().startsWith("~")) {
+		if (isSourceRootRelative()) {
 			return sourceRootDir.resolve("." + getValueWithoutExtension().substring(1)).normalize();
-		} else if (getValue().startsWith(".")) {
+		} else if (isRelative()) {
 			return sourceJavaScriptFile.resolve(".").normalize().resolve(getValueWithoutExtension()).normalize();
 		}
 
