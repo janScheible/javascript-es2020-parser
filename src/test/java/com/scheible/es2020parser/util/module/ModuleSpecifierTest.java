@@ -1,6 +1,7 @@
 package com.scheible.es2020parser.util.module;
 
 import com.scheible.es2020parser.util.SourcePosition;
+import java.io.File;
 import java.net.URI;
 import java.nio.file.Paths;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,14 +45,17 @@ public class ModuleSpecifierTest {
 
 	@Test
 	public void testResolvePath() {
-		assertThat(specifier("./page.js").resolve(Paths.get("d:/project/src"), Paths.get("d:/project/src/app.js")))
-				.isEqualTo(Paths.get("d:/project/src/page"));
-		assertThat(specifier("./page.js").resolve(Paths.get("d:/project/src"), Paths.get("./app.js")))
-				.isEqualTo(Paths.get("d:/project/src/page"));
-		assertThat(specifier("~/app.js").resolve(Paths.get("d:/project/src"), Paths.get("./page/page.js")))
-				.isEqualTo(Paths.get("d:/project/src/app"));
-		assertThat(specifier("file:/d:/src/app.js").resolve(Paths.get("d:/project/src"), Paths.get("./page/page.js")))
-				.isEqualTo(Paths.get("d:/src/app"));
+		final String prefix = File.separatorChar == '/' ? "/" : "c:/";
+		final String filePrefix = File.separatorChar == '/' ? "file:/" : "file:/c:/";
+
+		assertThat(specifier("./page.js").resolve(Paths.get(prefix + "project/src"), Paths.get(prefix + "project/src/app.js")))
+				.isEqualTo(Paths.get(prefix + "project/src/page"));
+		assertThat(specifier("./page.js").resolve(Paths.get(prefix + "project/src"), Paths.get("./app.js")))
+				.isEqualTo(Paths.get(prefix + "project/src/page"));
+		assertThat(specifier("~/app.js").resolve(Paths.get(prefix + "project/src"), Paths.get("./page/page.js")))
+				.isEqualTo(Paths.get(prefix + "project/src/app"));
+		assertThat(specifier(filePrefix + "src/app.js").resolve(Paths.get(prefix + "project/src"), Paths.get("./page/page.js")))
+				.isEqualTo(Paths.get(prefix + "src/app"));
 	}
 
 	private static ModuleSpecifier specifier(final String specifier) {
